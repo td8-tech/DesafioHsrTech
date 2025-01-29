@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.6.33712.159
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProdutoAPI", "ProdutoAPI\ProdutoAPI.csproj", "{56D4C614-4EDA-4558-81D5-EBFD5418D192}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProdutoAPI.Tests", "ProdutoAPI.Tests\ProdutoAPI.Tests.csproj", "{C4480BEA-6BDA-460E-A3D9-B2F5CA86F7D6}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{56D4C614-4EDA-4558-81D5-EBFD5418D192}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{56D4C614-4EDA-4558-81D5-EBFD5418D192}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{56D4C614-4EDA-4558-81D5-EBFD5418D192}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{56D4C614-4EDA-4558-81D5-EBFD5418D192}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C4480BEA-6BDA-460E-A3D9-B2F5CA86F7D6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C4480BEA-6BDA-460E-A3D9-B2F5CA86F7D6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C4480BEA-6BDA-460E-A3D9-B2F5CA86F7D6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C4480BEA-6BDA-460E-A3D9-B2F5CA86F7D6}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {A6A14480-17CA-4BDD-8D90-4783653499F7}
+	EndGlobalSection
+EndGlobal
