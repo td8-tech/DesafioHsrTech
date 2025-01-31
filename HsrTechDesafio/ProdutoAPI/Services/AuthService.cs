@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.DataProtection.KeyManagement;
 using Microsoft.IdentityModel.Tokens;
 using ProdutoAPI.Models;
 using ProdutoAPI.Repositories.Interfaces;
@@ -53,44 +54,58 @@ namespace ProdutoAPI.Services
         private string GenerateJwtToken(User user)
         {
             // 1. Criar a identidade de claims
-            var identity = new ClaimsIdentity(
-                authenticationType: JwtBearerDefaults.AuthenticationScheme,
-                nameType: ClaimTypes.Name,
-                roleType: ClaimTypes.Role);
+            //        var identity = new ClaimsIdentity(
+            //            authenticationType: JwtBearerDefaults.AuthenticationScheme,
+            //            nameType: ClaimTypes.Name,
+            //            roleType: ClaimTypes.Role);
 
-            // 2. Adicionar claims básicos
-            identity.AddClaims(new[]
-            {
-        new Claim(JwtRegisteredClaimNames.Sub, user.Id.ToString()),
-        new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
-        new Claim(JwtRegisteredClaimNames.UniqueName, user.Username),
-        new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
-    });
+            //        // 2. Adicionar claims básicos
+            //        identity.AddClaims(new[]
+            //        {
+            //    new Claim(JwtRegisteredClaimNames.Sub, user.Id.ToString()),
+            //    new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
+            //    new Claim(JwtRegisteredClaimNames.UniqueName, user.Username),
+            //    new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
+            //});
 
-            // 3. Adicionar roles como claims
-            identity.AddClaim(new Claim(ClaimTypes.Role, user.Role.ToString()));
+            //        // 3. Adicionar roles como claims
+            //        identity.AddClaim(new Claim(ClaimTypes.Role, user.Role.ToString()));
 
 
-            // 5. Configurar chave de segurança
+            //        // 5. Configurar chave de segurança
             var securityKey = new SymmetricSecurityKey(
                 Encoding.UTF8.GetBytes(_configuration["Jwt:Key"])
             );
 
-            // 6. Criar descritor do token
+            //        // 6. Criar descritor do token
+            //        var tokenDescriptor = new SecurityTokenDescriptor
+            //        {
+            //            Issuer = _configuration["Jwt:Issuer"],
+            //            Audience = _configuration["Jwt:Audience"],
+            //            Subject = identity, // Usar a identidade criada
+            //            Expires = DateTime.UtcNow.AddHours(2),
+            //            SigningCredentials = new SigningCredentials(
+            //                securityKey,
+            //                SecurityAlgorithms.HmacSha256Signature
+            //            )
+            //        };
+
+            //        // 7. Gerar e retornar token
+            //        var tokenHandler = new JwtSecurityTokenHandler();
+            //        var token = tokenHandler.CreateToken(tokenDescriptor);
+            //        return tokenHandler.WriteToken(token);
+
+            var tokenHandler = new JwtSecurityTokenHandler();
             var tokenDescriptor = new SecurityTokenDescriptor
             {
-                Issuer = _configuration["Jwt:Issuer"],
-                Audience = _configuration["Jwt:Audience"],
-                Subject = identity, // Usar a identidade criada
-                Expires = DateTime.UtcNow.AddHours(2),
-                SigningCredentials = new SigningCredentials(
-                    securityKey,
-                    SecurityAlgorithms.HmacSha256Signature
-                )
+                Subject = new ClaimsIdentity(new[] {
+                    new Claim(JwtRegisteredClaimNames.Sub, user.Id.ToString()),
+            new Claim(ClaimTypes.Name, user.Username),
+            new Claim(ClaimTypes.Role, user.Role)
+        }),
+                Expires = DateTime.UtcNow.AddHours(1),
+                SigningCredentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256Signature)
             };
-
-            // 7. Gerar e retornar token
-            var tokenHandler = new JwtSecurityTokenHandler();
             var token = tokenHandler.CreateToken(tokenDescriptor);
             return tokenHandler.WriteToken(token);
         }

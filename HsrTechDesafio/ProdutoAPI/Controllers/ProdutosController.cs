@@ -57,11 +57,16 @@ namespace ProdutoAPI.Controllers
         public async Task<IActionResult> CreateProduto([FromBody] ProdutoDTO request)
         {
 
-            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
             // Verifique se o usuário está autenticado
-            if (User.Identity.IsAuthenticated)
+            if (!User.Identity.IsAuthenticated)
                 return Unauthorized(new { message = "Usuário não autenticado." });
+
+            if (userIdClaim == null || !int.TryParse(userIdClaim, out int userId))
+            {
+                return Unauthorized(new { message = "Token inválido: ID do usuário não encontrado." });
+            }
 
             Produto Produto = request.Tipo switch
             {
@@ -69,18 +74,18 @@ namespace ProdutoAPI.Controllers
                 {
                     Nome = request.Nome,
                     Autor = request.Autor,
-                    CreatedByUserId = request.UserID
+                    CreatedByUserId = userId
                 },
                 "Eletronicos" => new Electronicos
                 {
                     Nome = request.Nome,
                     PeriodoGarantia = request.PeriodoGarantia,
-                    CreatedByUserId = request.UserID
+                    CreatedByUserId = userId
                 },
                 _ => throw new ArgumentException("Tipo de produto inválido")
             };
 
-            await _ProdutoService.AddProdutoAsync(Produto, request.UserID);
+            await _ProdutoService.AddProdutoAsync(Produto, userId);
             return CreatedAtAction(nameof(GetProdutoById), new { id = Produto.Id }, Produto);
         }
 
@@ -88,11 +93,18 @@ namespace ProdutoAPI.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateProduto(int id, [FromBody] ProdutoDTO request)
         {
-         
+            if (!User.Identity.IsAuthenticated)
+                return Unauthorized(new { message = "Usuário não autenticado." });
+
+
+            var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
             var role = User.FindFirst(ClaimTypes.Role)?.Value;
 
-            if (User.Identity.IsAuthenticated)
-                return Unauthorized(new { message = "Usuário não autenticado." });
+            if (userIdClaim == null || !int.TryParse(userIdClaim, out int userId))
+            {
+                return Unauthorized(new { message = "Token inválido: ID do usuário não encontrado." });
+            }
 
             Produto Produto = request.Tipo switch
             {
@@ -113,7 +125,7 @@ namespace ProdutoAPI.Controllers
 
             try
             {
-                await _ProdutoService.UpdateProdutoAsync(Produto, request.UserID, role);
+                await _ProdutoService.UpdateProdutoAsync(Produto, userId, role);
                 return NoContent();
             }
             catch (UnauthorizedAccessException ex)
@@ -131,10 +143,17 @@ namespace ProdutoAPI.Controllers
         public async Task<IActionResult> DeleteProduto(int id)
         {
 
-            if (User.Identity.IsAuthenticated)
+            if (!User.Identity.IsAuthenticated)
                 return Unauthorized(new { message = "Usuário não autenticado." });
 
+            var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
             var role = User.FindFirst(ClaimTypes.Role)?.Value;
+
+            if (userIdClaim == null || !int.TryParse(userIdClaim, out int userId))
+            {
+                return Unauthorized(new { message = "Token inválido: ID do usuário não encontrado." });
+            }
 
             try
             {
