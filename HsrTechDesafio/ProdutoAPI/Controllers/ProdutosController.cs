@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using ProdutoAPI.DTOS;
 using ProdutoAPI.Models;
@@ -7,8 +8,8 @@ using System.Security.Claims;
 
 namespace ProdutoAPI.Controllers
 {
-    [Route("api/[controller]")]
     [ApiController]
+    [Route("api/[controller]")]
     public class ProdutosController : ControllerBase
     {
         private readonly IProdutoService _ProdutoService;
@@ -55,7 +56,12 @@ namespace ProdutoAPI.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateProduto([FromBody] ProdutoDTO request)
         {
-            var userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
+
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+            // Verifique se o usuário está autenticado
+            if (User.Identity.IsAuthenticated)
+                return Unauthorized(new { message = "Usuário não autenticado." });
 
             Produto Produto = request.Tipo switch
             {
@@ -63,18 +69,18 @@ namespace ProdutoAPI.Controllers
                 {
                     Nome = request.Nome,
                     Autor = request.Autor,
-                    CreatedByUserId = userId
+                    CreatedByUserId = request.UserID
                 },
-                "Electronicos" => new Electronicos
+                "Eletronicos" => new Electronicos
                 {
                     Nome = request.Nome,
                     PeriodoGarantia = request.PeriodoGarantia,
-                    CreatedByUserId = userId
+                    CreatedByUserId = request.UserID
                 },
                 _ => throw new ArgumentException("Tipo de produto inválido")
             };
 
-            await _ProdutoService.AddProdutoAsync(Produto, userId);
+            await _ProdutoService.AddProdutoAsync(Produto, request.UserID);
             return CreatedAtAction(nameof(GetProdutoById), new { id = Produto.Id }, Produto);
         }
 
@@ -82,8 +88,11 @@ namespace ProdutoAPI.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateProduto(int id, [FromBody] ProdutoDTO request)
         {
-            var userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
+         
             var role = User.FindFirst(ClaimTypes.Role)?.Value;
+
+            if (User.Identity.IsAuthenticated)
+                return Unauthorized(new { message = "Usuário não autenticado." });
 
             Produto Produto = request.Tipo switch
             {
@@ -93,7 +102,7 @@ namespace ProdutoAPI.Controllers
                     Nome = request.Nome,
                     Autor = request.Autor
                 },
-                "Electronicos" => new Electronicos
+                "Eletronicos" => new Electronicos
                 {
                     Id = id,
                     Nome = request.Nome,
@@ -104,7 +113,7 @@ namespace ProdutoAPI.Controllers
 
             try
             {
-                await _ProdutoService.UpdateProdutoAsync(Produto, userId, role);
+                await _ProdutoService.UpdateProdutoAsync(Produto, request.UserID, role);
                 return NoContent();
             }
             catch (UnauthorizedAccessException ex)
@@ -121,12 +130,15 @@ namespace ProdutoAPI.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteProduto(int id)
         {
-            var userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
+
+            if (User.Identity.IsAuthenticated)
+                return Unauthorized(new { message = "Usuário não autenticado." });
+
             var role = User.FindFirst(ClaimTypes.Role)?.Value;
 
             try
             {
-                await _ProdutoService.DeleteProdutoAsync(id, userId, role);
+                await _ProdutoService.DeleteProdutoAsync(id, role);
                 return NoContent();
             }
             catch (UnauthorizedAccessException ex)

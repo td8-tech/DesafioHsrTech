@@ -22,6 +22,11 @@ namespace ProdutoAPI.Controllers
         {
             try
             {
+                // Validação do Role
+                if (request.Role != "Admin" && request.Role != "User")
+                {
+                    return BadRequest(new { message = "Role inválida. Valores permitidos: Admin, User" });
+                }
                 await _authService.RegisterAsync(request.Username, request.Password, request.Role);
                 return Ok(new { message = "Usuário registrado com sucesso." });
             }

@@ -37,7 +37,7 @@ namespace ProdutoAPI.Tests.Services
             {
                 Username = "admin",
                 PasswordHash = BCrypt.Net.BCrypt.HashPassword("senha123"),
-                Role = UserRole.Admin
+                Role = UserRole.Admin.ToString()
             };
 
             _userRepositoryMock.Setup(x => x.FindByUsernameAsync("admin"))

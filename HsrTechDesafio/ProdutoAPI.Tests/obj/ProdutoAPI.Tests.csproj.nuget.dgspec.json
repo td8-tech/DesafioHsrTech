@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Projetos-freela\\DesafioHsrTech\\DesafioHsrTech\\HsrTechDesafio\\ProdutoAPI.Tests\\ProdutoAPI.Tests.csproj": {}
+    "C:\\Projetos-freela\\DesafioHsrTech\\HsrTechDesafio\\ProdutoAPI.Tests\\ProdutoAPI.Tests.csproj": {}
   },
   "projects": {
-    "C:\\Projetos-freela\\DesafioHsrTech\\DesafioHsrTech\\HsrTechDesafio\\ProdutoAPI.Tests\\ProdutoAPI.Tests.csproj": {
+    "C:\\Projetos-freela\\DesafioHsrTech\\HsrTechDesafio\\ProdutoAPI.Tests\\ProdutoAPI.Tests.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Projetos-freela\\DesafioHsrTech\\DesafioHsrTech\\HsrTechDesafio\\ProdutoAPI.Tests\\ProdutoAPI.Tests.csproj",
+        "projectUniqueName": "C:\\Projetos-freela\\DesafioHsrTech\\HsrTechDesafio\\ProdutoAPI.Tests\\ProdutoAPI.Tests.csproj",
         "projectName": "ProdutoAPI.Tests",
-        "projectPath": "C:\\Projetos-freela\\DesafioHsrTech\\DesafioHsrTech\\HsrTechDesafio\\ProdutoAPI.Tests\\ProdutoAPI.Tests.csproj",
+        "projectPath": "C:\\Projetos-freela\\DesafioHsrTech\\HsrTechDesafio\\ProdutoAPI.Tests\\ProdutoAPI.Tests.csproj",
         "packagesPath": "C:\\Users\\Tiago.Alves\\.nuget\\packages\\",
-        "outputPath": "C:\\Projetos-freela\\DesafioHsrTech\\DesafioHsrTech\\HsrTechDesafio\\ProdutoAPI.Tests\\obj\\",
+        "outputPath": "C:\\Projetos-freela\\DesafioHsrTech\\HsrTechDesafio\\ProdutoAPI.Tests\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\Tiago.Alves\\AppData\\Roaming\\NuGet\\NuGet.Config",
@@ -29,8 +29,8 @@
           "net7.0": {
             "targetAlias": "net7.0",
             "projectReferences": {
-              "C:\\Projetos-freela\\DesafioHsrTech\\DesafioHsrTech\\HsrTechDesafio\\ProdutoAPI\\ProdutoAPI.csproj": {
-                "projectPath": "C:\\Projetos-freela\\DesafioHsrTech\\DesafioHsrTech\\HsrTechDesafio\\ProdutoAPI\\ProdutoAPI.csproj"
+              "C:\\Projetos-freela\\DesafioHsrTech\\HsrTechDesafio\\ProdutoAPI\\ProdutoAPI.csproj": {
+                "projectPath": "C:\\Projetos-freela\\DesafioHsrTech\\HsrTechDesafio\\ProdutoAPI\\ProdutoAPI.csproj"
               }
             }
           }
@@ -98,14 +98,14 @@
         }
       }
     },
-    "C:\\Projetos-freela\\DesafioHsrTech\\DesafioHsrTech\\HsrTechDesafio\\ProdutoAPI\\ProdutoAPI.csproj": {
+    "C:\\Projetos-freela\\DesafioHsrTech\\HsrTechDesafio\\ProdutoAPI\\ProdutoAPI.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Projetos-freela\\DesafioHsrTech\\DesafioHsrTech\\HsrTechDesafio\\ProdutoAPI\\ProdutoAPI.csproj",
+        "projectUniqueName": "C:\\Projetos-freela\\DesafioHsrTech\\HsrTechDesafio\\ProdutoAPI\\ProdutoAPI.csproj",
         "projectName": "ProdutoAPI",
-        "projectPath": "C:\\Projetos-freela\\DesafioHsrTech\\DesafioHsrTech\\HsrTechDesafio\\ProdutoAPI\\ProdutoAPI.csproj",
+        "projectPath": "C:\\Projetos-freela\\DesafioHsrTech\\HsrTechDesafio\\ProdutoAPI\\ProdutoAPI.csproj",
         "packagesPath": "C:\\Users\\Tiago.Alves\\.nuget\\packages\\",
-        "outputPath": "C:\\Projetos-freela\\DesafioHsrTech\\DesafioHsrTech\\HsrTechDesafio\\ProdutoAPI\\obj\\",
+        "outputPath": "C:\\Projetos-freela\\DesafioHsrTech\\HsrTechDesafio\\ProdutoAPI\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\Tiago.Alves\\AppData\\Roaming\\NuGet\\NuGet.Config",
@@ -163,6 +163,10 @@
             "System.Data.SqlClient": {
               "target": "Package",
               "version": "[4.9.0, )"
+            },
+            "System.IdentityModel.Tokens.Jwt": {
+              "target": "Package",
+              "version": "[7.7.1, )"
             }
           },
           "imports": [

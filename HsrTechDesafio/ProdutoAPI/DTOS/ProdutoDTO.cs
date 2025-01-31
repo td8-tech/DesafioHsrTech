@@ -6,5 +6,6 @@
         public string Tipo { get; set; } // "Livro" ou "Electronicos"
         public string Autor { get; set; }
         public int PeriodoGarantia { get; set; }
+        public int UserID { get; set; }
     }
 }

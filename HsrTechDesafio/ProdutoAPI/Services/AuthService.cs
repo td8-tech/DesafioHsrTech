@@ -1,4 +1,5 @@
-﻿using Microsoft.IdentityModel.Tokens;
+﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
 using ProdutoAPI.Models;
 using ProdutoAPI.Repositories.Interfaces;
 using ProdutoAPI.Services.Interfaces;
@@ -37,13 +38,13 @@ namespace ProdutoAPI.Services
 
             // Conversão de string para enum
             if (!Enum.TryParse<UserRole>(role, true, out var userRole))
-                throw new ArgumentException("Role inválida");
+                throw new ArgumentException("Role inválida. Use 'Admin' ou 'User'.");
 
             var user = new User
             {
                 Username = username,
                 PasswordHash = BCrypt.Net.BCrypt.HashPassword(password),
-                Role = userRole
+                Role = userRole.ToString() // 👈 Converte o enum para string (ex: "Admin")
             };
 
             await _userRepository.AddUserAsync(user);
@@ -51,24 +52,45 @@ namespace ProdutoAPI.Services
 
         private string GenerateJwtToken(User user)
         {
-            var tokenHandler = new JwtSecurityTokenHandler();
-            var key = Encoding.ASCII.GetBytes(_configuration["Jwt:Key"]);
+            // 1. Criar a identidade de claims
+            var identity = new ClaimsIdentity(
+                authenticationType: JwtBearerDefaults.AuthenticationScheme,
+                nameType: ClaimTypes.Name,
+                roleType: ClaimTypes.Role);
 
+            // 2. Adicionar claims básicos
+            identity.AddClaims(new[]
+            {
+        new Claim(JwtRegisteredClaimNames.Sub, user.Id.ToString()),
+        new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
+        new Claim(JwtRegisteredClaimNames.UniqueName, user.Username),
+        new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
+    });
+
+            // 3. Adicionar roles como claims
+            identity.AddClaim(new Claim(ClaimTypes.Role, user.Role.ToString()));
+
+
+            // 5. Configurar chave de segurança
+            var securityKey = new SymmetricSecurityKey(
+                Encoding.UTF8.GetBytes(_configuration["Jwt:Key"])
+            );
+
+            // 6. Criar descritor do token
             var tokenDescriptor = new SecurityTokenDescriptor
             {
-                Subject = new ClaimsIdentity(new[]
-                {
-                new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
-                new Claim(ClaimTypes.Role, user.Role.ToString())
-            }),
-                Expires = DateTime.UtcNow.AddHours(1),
                 Issuer = _configuration["Jwt:Issuer"],
                 Audience = _configuration["Jwt:Audience"],
+                Subject = identity, // Usar a identidade criada
+                Expires = DateTime.UtcNow.AddHours(2),
                 SigningCredentials = new SigningCredentials(
-                    new SymmetricSecurityKey(key),
-                    SecurityAlgorithms.HmacSha256Signature)
+                    securityKey,
+                    SecurityAlgorithms.HmacSha256Signature
+                )
             };
 
+            // 7. Gerar e retornar token
+            var tokenHandler = new JwtSecurityTokenHandler();
             var token = tokenHandler.CreateToken(tokenDescriptor);
             return tokenHandler.WriteToken(token);
         }

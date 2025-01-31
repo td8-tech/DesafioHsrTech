@@ -8,6 +8,6 @@ namespace ProdutoAPI.Services.Interfaces
         Task<Produto> GetProdutoByIdAsync(int ProdutoId, int userId, string role);
         Task AddProdutoAsync(Produto Produto, int userId);
         Task UpdateProdutoAsync(Produto Produto, int userId, string role);
-        Task DeleteProdutoAsync(int ProdutoId, int userId, string role);
+        Task DeleteProdutoAsync(int ProdutoId, string role, int userId = 2);
     }
 }

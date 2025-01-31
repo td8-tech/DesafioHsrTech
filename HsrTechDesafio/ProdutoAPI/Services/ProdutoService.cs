@@ -38,13 +38,11 @@ namespace ProdutoAPI.Services
 
         public async Task UpdateProdutoAsync(Produto Produto, int userId, string role)
         {
-            var existingProduto = await GetProdutoByIdAsync(Produto.Id, userId, role);
             await _produtoRepository.UpdateProdutoAsync(Produto);
         }
 
-        public async Task DeleteProdutoAsync(int ProdutoId, int userId, string role)
+        public async Task DeleteProdutoAsync(int ProdutoId, string role ,int userId = 2)
         {
-            var Produto = await GetProdutoByIdAsync(ProdutoId, userId, role);
             await _produtoRepository.DeleteProdutoAsync(ProdutoId);
         }
     }
